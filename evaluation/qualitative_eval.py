@@ -103,13 +103,13 @@ pathGroundTruth = pathFiles[-1]
 # ---------------------------- Process Files ------------------------------ #
 print("\nPreprocessing data")
 processedInput = []
-processedInputXR = []
+slicedInputXR = []
 for path in pathInput:
     with xr.open_dataset(path, engine="cfgrib", decode_timedelta=False) as ds:
         frame = ds[list(ds.data_vars)[0]]
         processedFrame = preprocess_frame(frame)
         processedInput.append(processedFrame.values)
-        processedInputXR.append(processedFrame)
+        slicedInputXR.append(np.maximum(0, np.exp(processedFrame) - 1e-4))
 
 tensorInput = np.stack(processedInput, axis=0)
 tensorInput = np.expand_dims(tensorInput, axis=[0, -1])
@@ -140,7 +140,7 @@ cmap.set_under('none')
 
 # Plot input frames on the first row
 for ii in range(4):
-    processedInputXR[ii].plot(ax=axes[0, ii], cmap=cmap, vmin=vmin, vmax=vmax, add_colorbar=False)
+    slicedInputXR[ii].plot(ax=axes[0, ii], cmap=cmap, vmin=vmin, vmax=vmax, add_colorbar=False)
     axes[0, ii].set_title(f"Input t-{(3 - ii) * 6} min")
 
 xrGroundTruth = xr.DataArray(data=mmhrGroundTruth, coords=processedFrame.coords)
