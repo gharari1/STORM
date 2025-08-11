@@ -1,0 +1,11 @@
+wandb_name: "lr0.00001-ConvLSTM"
+wandb_project: "transfer_learning"
+train_data: "train_dataset_SW_480.nc"
+val_data: "validation_dataset_SW_480.nc"
+model_weights: "lr0.0001_d0.1.weights.h5"
+seed: 0
+batch_size: 4
+epochs: 10
+input_shape: [4, 480, 480, 1]
+learning_rate: 0.00001
+dropout: 0.1
